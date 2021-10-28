@@ -20,7 +20,7 @@ const builder = () => {
 
     return (
         <div>
-            {formOpen &&<SumbitCard cells={defaultCells} onSubmit={addToPresets}/>}
+            {formOpen &&<SumbitCard onSubmit={addToPresets}/>}
 
             {!formOpen &&
             <div>
