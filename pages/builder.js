@@ -6,7 +6,7 @@ const builder = () => {
 
     const [formOpen, toggleForm] = useState(false);
 
-    const openForm = () => {
+    const openForm = ( ) => {
         toggleForm(!formOpen)
     }
 
