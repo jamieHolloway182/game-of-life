@@ -1,0 +1,25 @@
+.main{
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.canvasContainer{
+    padding:20px;
+}
+
+.description{
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.description p{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.description a{
+    color: rgb(32, 165, 209);
+    text-decoration: underline;
+}

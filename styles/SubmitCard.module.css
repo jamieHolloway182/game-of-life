@@ -1,0 +1,44 @@
+.container {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+}
+
+.container h4{
+    padding: 10px 0px 0px 5px;
+    margin: 0;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border: rgb(0, 0, 0) 1px solid;
+    width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.card form{
+    display: flex;
+    flex-direction: column;
+}
+
+.card form input{
+    margin: 5px;
+    width: 65%;
+}
+
+.card form textarea{
+    margin: 5px;
+    height: 100px;
+    resize: none;
+}
+
+.card Canvas{
+    margin: 3px;
+    padding: 0px;
+}
+
+.card button {
+    margin: 5px;
+}

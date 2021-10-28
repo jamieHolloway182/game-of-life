@@ -1,0 +1,52 @@
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border: black 1px solid;
+  text-align: left;
+}
+
+.top {  
+  display: flex;
+  margin: 5px;
+}
+  
+.card:hover {
+  box-shadow: 0 16px 16px 0 lightblue;
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.stats {
+  display: flex;
+}
+
+.canvas {
+  margin-top: 5px;
+  margin-right: 4px;
+}
+
+.stats p {
+  padding-right: 40px;
+}
+
+.bottom {
+  padding: 2px 16px;
+  margin: 5px;
+}
+
+.bottom p {
+  width: 1000px;
+  overflow-wrap: break-word;
+  margin: 0px 0px 5px 0px;
+}
+
+.bottom h4{
+  text-decoration: none;
+  margin: 0px;
+  width:10px;
+  font-weight: normal;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
