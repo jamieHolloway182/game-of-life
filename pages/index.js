@@ -1,4 +1,4 @@
-import Head from 'next/Head'
+import Head from 'next/head'
 import Canvas from '../components/Canvas/Canvas'
 import homeStyle from '../styles/Index.module.css'
 import {useState} from 'react'
