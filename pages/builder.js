@@ -5,9 +5,12 @@ import SumbitCard from '../components/SumbitCard'
 const builder = () => {
 
     const [formOpen, toggleForm] = useState(false);
+    const [cells, updateCells] = useState([]);
 
-    const openForm = ( ) => {
-        toggleForm(!formOpen)
+    const openForm = (canvasCells) => {
+        toggleForm(!formOpen);
+        updateCells(canvasCells);
+        console.log(canvasCells);
     }
 
     const updateCanvas = () => {
@@ -20,7 +23,7 @@ const builder = () => {
 
     return (
         <div>
-            {formOpen &&<SumbitCard onSubmit={addToPresets}/>}
+            {formOpen &&<SumbitCard cells={cells}onSubmit={addToPresets}/>}
 
             {!formOpen &&
             <div>

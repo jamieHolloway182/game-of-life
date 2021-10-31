@@ -15,20 +15,20 @@ const PresetCard = ({id, name, date, views, likes, dislikes, description}) => {
             <div className={presetCardStyle.card}>
                 <div className={presetCardStyle.top}>
                     <div className={presetCardStyle.container}>
-                        <h4><b>{name +":"}</b></h4>
+                        <h3><b>{name +":"}</b></h3>
                         <div className = {presetCardStyle.stats}>
                             <p className = {presetCardStyle.point}>Date Created: {date}</p><br></br>
                             <p>Views: {id}</p>
                             <p>Likes: {likes}</p>
                             <p>Dislikes: {dislikes}</p>
                         </div>
+                        <h4>Description:</h4>
                     </div>
                     <div className= {presetCardStyle.canvas}>
                         <Canvas cells={defaultCells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
                     </div> 
                 </div>
                 <div className={presetCardStyle.bottom}>
-                    <h4>Description:</h4>
                     <p>{description}</p>
                 </div>
             </div>

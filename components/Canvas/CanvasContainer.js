@@ -9,6 +9,7 @@ const CanvasContainer = ({openForm}) => {
     const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill(false)));
     const [running, start] = useState(false);
     const [intervalSecs, changeInterval] = useState(10);
+    const [originalCells, updateOriginalCells] = useState(cells) 
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -19,16 +20,32 @@ const CanvasContainer = ({openForm}) => {
         return () => clearInterval(interval);
     });
 
+    const submitCells = () => {
+        openForm(originalCells);
+    }
+
     const onCanvasClick = (x, y) => {
-        updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? !cells[y][x] : cells[yIndex][xIndex])));
+        if (!running) {
+            updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? !cells[y][x] : cells[yIndex][xIndex])));
+            updateOriginalCells(cells);
+        }
     }
 
     const startRunning = () =>{
-        start(true)
+        start(true);
     }
 
     const stopRunning = () =>{
+        start(false);
+    }
+
+    const resetCanvas = () => {
+        updateCells(cells.map((elem) => elem.map(() => false)));
         start(false)
+    }
+
+    const step = () => {
+        update();
     }
 
     const update = () => {
@@ -37,7 +54,6 @@ const CanvasContainer = ({openForm}) => {
 
     const updateInterval = (value) => {
         changeInterval(1000 / value);
-        console.log(value)
     }
 
     const check = (x, y) => {
@@ -72,7 +88,7 @@ const CanvasContainer = ({openForm}) => {
 
     return (
         <div>
-            <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} openForm={openForm}/>
+            <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} reset={resetCanvas} step={step} openForm={submitCells}/>
             <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} onClick={onCanvasClick}/>
         </div>
     )
