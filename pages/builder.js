@@ -21,13 +21,17 @@ const builder = () => {
         console.log(data);
     }
 
+    const closeForm = () => {
+        toggleForm(!formOpen);
+    }
+
     return (
         <div>
-            {formOpen &&<SumbitCard cells={cells}onSubmit={addToPresets}/>}
+            {formOpen &&<SumbitCard cells={cells}onSubmit={addToPresets} onClose={closeForm}/>}
 
             {!formOpen &&
             <div>
-                <CanvasContainer openForm={openForm}/>
+                <CanvasContainer openForm={openForm} showButtons={true}/>
             </div>};
         </div>
     )

@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import Canvas from '../components/Canvas/Canvas'
 import homeStyle from '../styles/Index.module.css'
 import {useState} from 'react'
 import Link from 'next/link'
+import CanvasContainer from '../components/Canvas/CanvasContainer'
 
 
 
@@ -10,7 +10,7 @@ export default function Home() {
 
   const [canvasDimensions, updateDimensions] = useState([80, 40])
   const [cellSize, updateCellSize] = useState(10);
-  const [defaultCells, updateCells] = useState(Array(canvasDimensions[0] * canvasDimensions[1]).fill(true));
+  const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
 
   return (
     <div className={homeStyle.main}>
@@ -26,7 +26,7 @@ export default function Home() {
       </div>
       <h3>Featured Design</h3>
       <div className={homeStyle.canvasContainer}>
-        <Canvas cells={defaultCells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
+        <CanvasContainer cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} showButtons={false}/>
       </div>
     </div>
   )

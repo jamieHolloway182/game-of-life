@@ -1,7 +1,7 @@
 import Button from './Button'
 import Link from 'next/link'
 
-const CanvasButtons = ({openForm, onRun, onPause, onSlide, reset, step}) => {
+const CanvasButtons = ({openForm, onRun, onPause, onSlide, reset, step, gen, pop}) => {
 
     const onChange = (event) => {
         onSlide(event.target.value)
@@ -18,6 +18,8 @@ const CanvasButtons = ({openForm, onRun, onPause, onSlide, reset, step}) => {
             <Link href="/presets">
                 <Button text="Presets"/>
             </Link>
+            Generation : {gen}
+            Population : {pop}
         </div>
     )
 }

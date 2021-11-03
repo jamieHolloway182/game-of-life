@@ -1,15 +1,15 @@
 import { useState } from "react";
-import Canvas from "../../components/Canvas/Canvas";
+import CanvasContainer from "../../components/Canvas/CanvasContainer";
 
 const RunPreset = () => {
 
     const [canvasDimensions, updateDimensions] = useState([100, 50])
     const [cellSize, updateCellSize] = useState(10);
-    const [defaultCells, updateCells] = useState(Array(canvasDimensions[0] * canvasDimensions[1]).fill(true));
+    const [defaultCells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
 
     return (
         <div>
-            <Canvas cells={defaultCells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
+            <CanvasContainer showButtons={false}/>
         </div>
     )
 }

@@ -2,16 +2,25 @@ import Canvas from "./Canvas"
 import CanvasButtons from "./CanvasButtons"
 import { useState, useEffect } from "react"
 
-const CanvasContainer = ({openForm}) => {
+const CanvasContainer = ({openForm, showButtons}) => {
 
     const [canvasDimensions, updateDimensions] = useState([100, 50])
     const [cellSize, updateCellSize] = useState(10);
-    const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill(false)));
+    const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
     const [running, start] = useState(false);
     const [intervalSecs, changeInterval] = useState(10);
-    const [originalCells, updateOriginalCells] = useState(cells) 
+    const [originalCells, updateOriginalCells] = useState(cells);
+    const [generationNumber, updateGeneration] = useState(0);
+    const [populationSize, updatePopulation] = useState(0);
+    const [displayCanvas, changeDisplay] = useState(true);
+
+    const isUpperCase = (string) => /^[A-Z]*$/.test(string)
 
     useEffect(() => {
+        if (window.visualViewport.width <= canvasDimensions[0] * cellSize){
+            changeDisplay(false);
+        }
+
         const interval = setInterval(() => {
             if (running){
                 update();
@@ -20,13 +29,29 @@ const CanvasContainer = ({openForm}) => {
         return () => clearInterval(interval);
     });
 
+    useEffect(() => {
+        window.onresize = () => {
+            if (window.visualViewport.width <= canvasDimensions[0] * cellSize){
+                changeDisplay(false);
+            }else{
+                changeDisplay(true)
+            }
+        }
+    }, [])
+
     const submitCells = () => {
         openForm(originalCells);
+        validateCellsForDatabase(originalCells);
     }
 
     const onCanvasClick = (x, y) => {
         if (!running) {
-            updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? !cells[y][x] : cells[yIndex][xIndex])));
+            if (isUpperCase(cells[y][x])) {
+                updatePopulation(populationSize - 1);
+            }else {
+                updatePopulation(populationSize + 1);
+            }
+            updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? isUpperCase(cells[y][x]) ? cells[y][x].toLowerCase() : cells[y][x].toUpperCase() : cells[yIndex][xIndex])));
             updateOriginalCells(cells);
         }
     }
@@ -40,8 +65,10 @@ const CanvasContainer = ({openForm}) => {
     }
 
     const resetCanvas = () => {
-        updateCells(cells.map((elem) => elem.map(() => false)));
-        start(false)
+        updateCells(cells.map((elem) => elem.map(() => 'a')));
+        updateGeneration(0);
+        updatePopulation(0);
+        start(false);
     }
 
     const step = () => {
@@ -50,24 +77,47 @@ const CanvasContainer = ({openForm}) => {
 
     const update = () => {
         updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => check(xIndex, yIndex))));
+        updateGeneration(generationNumber + 1);
     }
 
     const updateInterval = (value) => {
         changeInterval(1000 / value);
     }
 
+    const validateCellsForDatabase = (cells) => {
+        let arr = [].concat(...cells)
+        let encoding = [];
+
+        let count = 1
+        let previous = arr[0];
+        
+        for ( let i = 1; i < arr.length; i++) {
+            if (arr[i] !== previous) {
+                encoding.push(count, previous);
+                count = 1;
+                previous = arr[i];
+            } else {
+                count++;
+            }
+        }
+        encoding.push(count, previous);
+        console.log(encoding)
+        return encoding;
+    }
+
     const check = (x, y) => {
         let num = getNumAround(x, y);
-        if (cells[y][x]) {
+        let cell = cells[y][x];
+        if (isUpperCase(cell)) {
             if (!(num == 3 || num == 2)) {
-                return false;
+                return cell.toLowerCase();
             }
         }else {
             if (num == 3) {
-                return true;
+                return cell.toUpperCase();
             }
         }
-        return cells[y][x];
+        return cell;
     } 
 
     const getNumAround = (xC, yC) => {
@@ -76,7 +126,7 @@ const CanvasContainer = ({openForm}) => {
             for (let y = yC - 1; y <= yC + 1; y ++){
                 if (!(x == xC && y == yC)){
                     if (x >= 0 && x < canvasDimensions[0] && y >= 0 && y< canvasDimensions[1]) {
-                        if (cells[y][x]) {
+                        if (isUpperCase(cells[y][x])) {
                             num = num + 1
                         }
                     }
@@ -88,8 +138,10 @@ const CanvasContainer = ({openForm}) => {
 
     return (
         <div>
-            <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} reset={resetCanvas} step={step} openForm={submitCells}/>
-            <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} onClick={onCanvasClick}/>
+            {(displayCanvas && showButtons) && <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} reset={resetCanvas} step={step} openForm={submitCells} gen={generationNumber} pop={populationSize}/>}
+            {displayCanvas && <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} onClick={onCanvasClick}/>}
+
+            {!displayCanvas && <>{"Canvas not currently available in this browser, please increase screen width"}</>}
         </div>
     )
 }

@@ -2,7 +2,7 @@ import SumbitCardStyles from '../styles/SubmitCard.module.css'
 import Canvas from './Canvas/Canvas'
 import { useState, useRef } from 'react'
 
-const SumbitCard = ({cells, onSubmit}) => {
+const SumbitCard = ({cells, onSubmit, onClose}) => {
     const nameRef = useRef();
     const authorRef = useRef();
     const descriptionRef = useRef();
@@ -38,6 +38,7 @@ const SumbitCard = ({cells, onSubmit}) => {
                 <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
                 <button onClick={submit}>Submit</button>
             </div>
+            <button onClick={onClose}>Return</button>
         </div>
         
     )

@@ -5,6 +5,11 @@ import canvasStyles from '../../styles/Canvas/Canvas.module.css'
 const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
   
   const canvasRef = useRef(null);
+  const [mouse, updateMouse] = useState(false);
+  const [lastCoords, updateLastCoords] = useState([-1,-1])
+  const [clickedAlive, changeClicked] = useState(true);
+
+  const isUpperCase = (string) => /^[A-Z]*$/.test(string);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -33,7 +38,8 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
   const drawCells = (ctx, cells) => {
     for (let y = 0; y < canvasDimensions[1]; y ++){
       for (let x = 0; x < canvasDimensions[0]; x ++){
-        if (cells[y][x]){
+        let cell = cells[y][x];
+        if (cell == cell.toUpperCase()){
           ctx.beginPath();
           ctx.fillStyle = "white";
           ctx.rect(x * cellSize, y * cellSize, cellSize, cellSize);
@@ -43,11 +49,39 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
     }
   }
 
-  const clicked = (event) => {
+  const onMouseDown = (e, first=true) => {
+    clickCell(e, first)
+    updateMouse(!mouse);
+  }
+
+  const onMouseUp = () => {
+    updateMouse(!mouse);
+  }
+
+  const onMouseMove = (e) => {
+    if (mouse) {
+      clickCell(e, false);
+    }
+  }
+
+  const clickCell = (event, first) => {
+    const x = getCell(event)[0];
+    const y = getCell(event)[1];
+    const cellClickedAlive = !isUpperCase(cells[y][x]);
+    if (first) {
+      changeClicked(cellClickedAlive);
+    }
+    if ((!(x == lastCoords[0] && y ==lastCoords[1]) && cellClickedAlive == clickedAlive) || first) {
+      onClick(x, y);
+      updateLastCoords([x,y])
+    }
+  }
+
+  const getCell =  (event) => {
     const coords = relMouseCoords(event);
     const x = Math.floor(Math.min(canvasDimensions[0] - 1,(Math.max(coords.x / cellSize, 0))));
     const y = Math.floor(Math.min(canvasDimensions[1] - 1,(Math.max(coords.y / cellSize, 0))));
-    onClick(x, y)
+    return [x,y];
   }
 
   function relMouseCoords(event){
@@ -71,12 +105,10 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
   
   return (
       <div className = {canvasStyles.canvasContainer}>
-          <canvas onClick={clicked.bind(this)} className = {canvasStyles.canvas} ref = {canvasRef} width={canvasDimensions[0] * cellSize} height={canvasDimensions[1] * cellSize} ></canvas>
+          <canvas onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} className = {canvasStyles.canvas} ref={canvasRef} width={canvasDimensions[0] * cellSize} height={canvasDimensions[1] * cellSize} ></canvas>
+          
       </div>
   )
 }
-
-
-
 
 export default Canvas
