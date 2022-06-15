@@ -35,7 +35,7 @@ const SumbitCard = ({cells, onSubmit, onClose}) => {
                     <input type = "text" placeholder="Configuratuon Author..." ref={authorRef}></input>
                     <textarea maxLength={300} placeholder="Configuration Description..." ref={descriptionRef}></textarea>
                 </form>
-                <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
+                <Canvas cells={cells} displayDimensions={canvasDimensions} cellSize={cellSize}/>
                 <button onClick={submit}>Submit</button>
             </div>
             <button onClick={onClose}>Return</button>

@@ -7,7 +7,7 @@ const PresetCard = ({id, name, date, views, likes, dislikes, description}) => {
     
     const [canvasDimensions, updateDimensions] = useState([50, 15])
     const [cellSize, updateCellSize] = useState(10);
-        const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
+    const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
 
     const link = "/presets/" + id.toString();
 
@@ -26,7 +26,7 @@ const PresetCard = ({id, name, date, views, likes, dislikes, description}) => {
                         <h4>Description:</h4>
                     </div>
                     <div className= {presetCardStyle.canvas}>
-                        <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize}/>
+                        <Canvas cells={cells} displayDimensions={canvasDimensions} cellSize={cellSize}/>
                     </div> 
                 </div>
                 <div className={presetCardStyle.bottom}>

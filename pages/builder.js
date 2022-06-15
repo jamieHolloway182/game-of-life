@@ -18,7 +18,16 @@ const builder = () => {
     }
 
     const addToPresets = (data) => {
-        console.log(data);
+        async function addPresetHandler(data){
+            const response = await fetch('/api/new-preset', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+        }
     }
 
     const closeForm = () => {
@@ -32,7 +41,7 @@ const builder = () => {
             {!formOpen &&
             <div>
                 <CanvasContainer openForm={openForm} showButtons={true}/>
-            </div>};
+            </div>}
         </div>
     )
 }

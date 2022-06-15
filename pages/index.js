@@ -24,10 +24,10 @@ export default function Home() {
         <h3>What can you do on this site?</h3>
         <p>On Game of Life Builder you can use our interactive canvas located on the <Link href="./builder">builder tab</Link> to easily build and deploy configurations, which you can then easily watch run, using the canvas to adjust the Game of Life settings such as update interval and cell colour. On top of this, the <Link href="./presets">presets tab</Link> allows you to view all previous configuration submissions via our database. These presets can either be viewed on the presets page, or imported into the builder to use as a basis for your own design, which can be submitted onto our database to be made accessible on the presets page.</p>
       </div>
-      <h3>Featured Design</h3>
+      {/* <h3>Featured Design</h3>
       <div className={homeStyle.canvasContainer}>
         <CanvasContainer cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} showButtons={false}/>
-      </div>
+      </div> */}
     </div>
   )
 }

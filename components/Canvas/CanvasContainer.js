@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 
 const CanvasContainer = ({openForm, showButtons}) => {
 
-    const [canvasDimensions, updateDimensions] = useState([100, 50])
+    const [canvasDimensions, updateDimensions] = useState([1000, 500]);
+    const [displayDimensions, updateDisplayDimensions] = useState([100, 50])
     const [cellSize, updateCellSize] = useState(10);
     const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
     const [running, start] = useState(false);
@@ -12,16 +13,14 @@ const CanvasContainer = ({openForm, showButtons}) => {
     const [originalCells, updateOriginalCells] = useState(cells);
     const [generationNumber, updateGeneration] = useState(0);
     const [populationSize, updatePopulation] = useState(0);
-    const [displayCanvas, changeDisplay] = useState(true);
 
     const isUpperCase = (string) => /^[A-Z]*$/.test(string)
 
     useEffect(() => {
-        if (window.visualViewport.width <= canvasDimensions[0] * cellSize){
-            changeDisplay(false);
-        }
 
         const interval = setInterval(() => {
+            let num = Math.min(100, Math.floor((window.visualViewport.width - 50) /cellSize));
+            updateDisplayDimensions([num, displayDimensions[1]]);
             if (running){
                 update();
             }
@@ -31,11 +30,9 @@ const CanvasContainer = ({openForm, showButtons}) => {
 
     useEffect(() => {
         window.onresize = () => {
-            if (window.visualViewport.width <= canvasDimensions[0] * cellSize){
-                changeDisplay(false);
-            }else{
-                changeDisplay(true)
-            }
+            let num = Math.min(100, Math.floor((window.visualViewport.width - 50) /cellSize));
+            updateDisplayDimensions([num, 50]);
+            console.log(displayDimensions);
         }
     }, [])
 
@@ -46,12 +43,12 @@ const CanvasContainer = ({openForm, showButtons}) => {
 
     const onCanvasClick = (x, y) => {
         if (!running) {
+            updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? isUpperCase(cells[y][x]) ? cells[y][x].toLowerCase() : cells[y][x].toUpperCase() : cells[yIndex][xIndex])));
             if (isUpperCase(cells[y][x])) {
                 updatePopulation(populationSize - 1);
             }else {
                 updatePopulation(populationSize + 1);
             }
-            updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => xIndex == x && yIndex == y ? isUpperCase(cells[y][x]) ? cells[y][x].toLowerCase() : cells[y][x].toUpperCase() : cells[yIndex][xIndex])));
             updateOriginalCells(cells);
         }
     }
@@ -78,6 +75,11 @@ const CanvasContainer = ({openForm, showButtons}) => {
     const update = () => {
         updateCells(cells.map((elem, yIndex) => elem.map((cell, xIndex) => check(xIndex, yIndex))));
         updateGeneration(generationNumber + 1);
+        let count = 0;
+        cells.forEach((elem) => elem.forEach((cell) => {if(isUpperCase(cell)){
+            count++;
+        }}));
+        updatePopulation(count);
     }
 
     const updateInterval = (value) => {
@@ -101,7 +103,6 @@ const CanvasContainer = ({openForm, showButtons}) => {
             }
         }
         encoding.push(count, previous);
-        console.log(encoding)
         return encoding;
     }
 
@@ -138,10 +139,8 @@ const CanvasContainer = ({openForm, showButtons}) => {
 
     return (
         <div>
-            {(displayCanvas && showButtons) && <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} reset={resetCanvas} step={step} openForm={submitCells} gen={generationNumber} pop={populationSize}/>}
-            {displayCanvas && <Canvas cells={cells} canvasDimensions={canvasDimensions} cellSize={cellSize} onClick={onCanvasClick}/>}
-
-            {!displayCanvas && <>{"Canvas not currently available in this browser, please increase screen width"}</>}
+            <CanvasButtons onRun={startRunning} onPause={stopRunning} onSlide={updateInterval} reset={resetCanvas} step={step} openForm={submitCells} gen={generationNumber} pop={populationSize}/>
+            <Canvas cells={cells} displayDimensions={displayDimensions} cellSize={cellSize} onClick={onCanvasClick}/>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import React, { useRef, useEffect } from 'react'
 import canvasStyles from '../../styles/Canvas/Canvas.module.css'
 
-const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
+const Canvas = ({cells, displayDimensions, cellSize, onClick}) => {
   
   const canvasRef = useRef(null);
   const [mouse, updateMouse] = useState(false);
@@ -28,7 +28,7 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
     }
     for (let i = 0; i < ctx.canvas.width / cellSize ; i ++){
         ctx.moveTo(i * cellSize, 0);
-        ctx.lineTo(i* cellSize, ctx.canvas.width);
+        ctx.lineTo(i* cellSize, ctx.canvas.height);
     }
     ctx.stroke();
   })
@@ -36,8 +36,8 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
 
 
   const drawCells = (ctx, cells) => {
-    for (let y = 0; y < canvasDimensions[1]; y ++){
-      for (let x = 0; x < canvasDimensions[0]; x ++){
+    for (let y = 0; y < displayDimensions[1]; y ++){
+      for (let x = 0; x < displayDimensions[0]; x ++){
         let cell = cells[y][x];
         if (cell == cell.toUpperCase()){
           ctx.beginPath();
@@ -79,8 +79,8 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
 
   const getCell =  (event) => {
     const coords = relMouseCoords(event);
-    const x = Math.floor(Math.min(canvasDimensions[0] - 1,(Math.max(coords.x / cellSize, 0))));
-    const y = Math.floor(Math.min(canvasDimensions[1] - 1,(Math.max(coords.y / cellSize, 0))));
+    const x = Math.floor(Math.min(displayDimensions[0] - 1,(Math.max(coords.x / cellSize, 0))));
+    const y = Math.floor(Math.min(displayDimensions[1] - 1,(Math.max(coords.y / cellSize, 0))));
     return [x,y];
   }
 
@@ -105,7 +105,7 @@ const Canvas = ({cells, canvasDimensions, cellSize, onClick}) => {
   
   return (
       <div className = {canvasStyles.canvasContainer}>
-          <canvas onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} className = {canvasStyles.canvas} ref={canvasRef} width={canvasDimensions[0] * cellSize} height={canvasDimensions[1] * cellSize} ></canvas>
+          <canvas onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} className = {canvasStyles.canvas} ref={canvasRef} width={displayDimensions[0] * cellSize} height={displayDimensions[1] * cellSize} ></canvas>
           
       </div>
   )
