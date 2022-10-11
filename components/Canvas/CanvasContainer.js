@@ -38,7 +38,6 @@ const CanvasContainer = ({openForm, showButtons}) => {
 
     const submitCells = () => {
         openForm(originalCells);
-        validateCellsForDatabase(originalCells);
     }
 
     const onCanvasClick = (x, y) => {
@@ -84,26 +83,6 @@ const CanvasContainer = ({openForm, showButtons}) => {
 
     const updateInterval = (value) => {
         changeInterval(1000 / value);
-    }
-
-    const validateCellsForDatabase = (cells) => {
-        let arr = [].concat(...cells)
-        let encoding = [];
-
-        let count = 1
-        let previous = arr[0];
-        
-        for ( let i = 1; i < arr.length; i++) {
-            if (arr[i] !== previous) {
-                encoding.push(count, previous);
-                count = 1;
-                previous = arr[i];
-            } else {
-                count++;
-            }
-        }
-        encoding.push(count, previous);
-        return encoding;
     }
 
     const check = (x, y) => {

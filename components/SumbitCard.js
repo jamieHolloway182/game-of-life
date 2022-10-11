@@ -9,18 +9,39 @@ const SumbitCard = ({cells, onSubmit, onClose}) => {
 
     const submit = (event) => {
         event.preventDefault();
-
+        const validCells = validateCellsForDatabase(cells);
         const nameInput = nameRef.current.value;
         const authorInput = authorRef.current.value;
         const descriptionInput = descriptionRef.current.value;
 
         const submitData = {
+            cells: validCells,
             name : nameInput,
             author : authorInput,
             description : descriptionInput
         }
 
         onSubmit(submitData);
+    }
+
+    const validateCellsForDatabase = (cells) => {
+        let arr = [].concat(...cells)
+        let encoding = [];
+
+        let count = 1
+        let previous = arr[0];
+        
+        for ( let i = 1; i < arr.length; i++) {
+            if (arr[i] !== previous) {
+                encoding.push(count, previous);
+                count = 1;
+                previous = arr[i];
+            } else {
+                count++;
+            }
+        }
+        encoding.push(count, previous);
+        return encoding;
     }
 
     const [canvasDimensions, updateDimensions] = useState([92, 30]);

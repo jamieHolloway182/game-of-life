@@ -10,24 +10,23 @@ const builder = () => {
     const openForm = (canvasCells) => {
         toggleForm(!formOpen);
         updateCells(canvasCells);
-        console.log(canvasCells);
     }
 
     const updateCanvas = () => {
         updateCells()
     }
 
-    const addToPresets = (data) => {
-        async function addPresetHandler(data){
-            const response = await fetch('/api/new-preset', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const result = await response.json();
-        }
+    async function addPresetHandler(data){
+        console.log("Hel")
+        const response = await fetch('/api/new-preset', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const result = await response.json();
+        console.log(result)
     }
 
     const closeForm = () => {
@@ -36,7 +35,7 @@ const builder = () => {
 
     return (
         <div>
-            {formOpen &&<SumbitCard cells={cells}onSubmit={addToPresets} onClose={closeForm}/>}
+            {formOpen &&<SumbitCard cells={cells}onSubmit={addPresetHandler} onClose={closeForm}/>}
 
             {!formOpen &&
             <div>
