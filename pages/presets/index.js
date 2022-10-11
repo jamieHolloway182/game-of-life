@@ -60,8 +60,6 @@ export async function getServerSideProps(){
 
     const presets = await presetsCollections.find().toArray();
 
-    console.log(presets)
-
     return {
         props: {
             presets: presets.map((preset) => ({

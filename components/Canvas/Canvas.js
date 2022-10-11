@@ -12,6 +12,7 @@ const Canvas = ({cells, displayDimensions, cellSize, onClick}) => {
   const isUpperCase = (string) => /^[A-Z]*$/.test(string);
   
   useEffect(() => {
+    console.log(displayDimensions)
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
