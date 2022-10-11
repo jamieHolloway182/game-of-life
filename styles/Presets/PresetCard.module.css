@@ -3,9 +3,7 @@
   transition: 0.3s;
   border: black 1px solid;
   text-align: left;
-}
-
-.container h4{
+  margin: 10px;
 }
 
 .top {  

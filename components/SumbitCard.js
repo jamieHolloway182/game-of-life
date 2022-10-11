@@ -7,6 +7,20 @@ const SumbitCard = ({cells, onSubmit, onClose}) => {
     const authorRef = useRef();
     const descriptionRef = useRef();
 
+    const getDate = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+        return formattedToday;
+    }
+
     const submit = (event) => {
         event.preventDefault();
         const validCells = validateCellsForDatabase(cells);
@@ -18,29 +32,34 @@ const SumbitCard = ({cells, onSubmit, onClose}) => {
             cells: validCells,
             name : nameInput,
             author : authorInput,
-            description : descriptionInput
+            description : descriptionInput,
+            date : getDate(),
+            views : 0,
+            likes : 0,
+            dislikes : 0
         }
 
         onSubmit(submitData);
+        onClose();
     }
 
     const validateCellsForDatabase = (cells) => {
         let arr = [].concat(...cells)
-        let encoding = [];
+        let encoding = "";
 
         let count = 1
         let previous = arr[0];
         
         for ( let i = 1; i < arr.length; i++) {
             if (arr[i] !== previous) {
-                encoding.push(count, previous);
+                encoding += count + previous;
                 count = 1;
                 previous = arr[i];
             } else {
                 count++;
             }
         }
-        encoding.push(count, previous);
+        encoding += count + previous;
         return encoding;
     }
 

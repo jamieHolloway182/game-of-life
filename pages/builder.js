@@ -17,7 +17,6 @@ const builder = () => {
     }
 
     async function addPresetHandler(data){
-        console.log("Hel")
         const response = await fetch('/api/new-preset', {
             method: 'POST',
             body: JSON.stringify(data),
@@ -26,7 +25,6 @@ const builder = () => {
             }
         });
         const result = await response.json();
-        console.log(result)
     }
 
     const closeForm = () => {

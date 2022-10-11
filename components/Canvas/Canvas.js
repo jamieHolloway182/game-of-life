@@ -36,6 +36,7 @@ const Canvas = ({cells, displayDimensions, cellSize, onClick}) => {
 
 
   const drawCells = (ctx, cells) => {
+    console.log(cells)
     for (let y = 0; y < displayDimensions[1]; y ++){
       for (let x = 0; x < displayDimensions[0]; x ++){
         let cell = cells[y][x];

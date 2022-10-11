@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 const CanvasContainer = ({openForm, showButtons}) => {
 
-    const [canvasDimensions, updateDimensions] = useState([1000, 500]);
+    const [canvasDimensions, updateDimensions] = useState([100, 50]);
     const [displayDimensions, updateDisplayDimensions] = useState([100, 50])
     const [cellSize, updateCellSize] = useState(10);
     const [cells, updateCells] = useState(Array(canvasDimensions[1]).fill(Array(canvasDimensions[0]).fill('a')));
@@ -32,7 +32,6 @@ const CanvasContainer = ({openForm, showButtons}) => {
         window.onresize = () => {
             let num = Math.min(100, Math.floor((window.visualViewport.width - 50) /cellSize));
             updateDisplayDimensions([num, 50]);
-            console.log(displayDimensions);
         }
     }, [])
 
