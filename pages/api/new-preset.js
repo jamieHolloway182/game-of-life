@@ -8,6 +8,7 @@ async function handler(req, res) {
         const db = client.db();
         
         const presetsCollections = db.collection('presets');
+        console.log(presetsCollections)
         
         const result = await presetsCollections.insertOne(data);
         console.log(result)
