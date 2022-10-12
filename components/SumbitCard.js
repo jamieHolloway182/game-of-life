@@ -23,24 +23,28 @@ const SumbitCard = ({cells, onSubmit, onClose}) => {
 
     const submit = (event) => {
         event.preventDefault();
-        const validCells = validateCellsForDatabase(cells);
         const nameInput = nameRef.current.value;
         const authorInput = authorRef.current.value;
         const descriptionInput = descriptionRef.current.value;
+        
+        if (nameInput.length > 2 && authorInput.length > 2 && descriptionInput.length > 2){
+            const validCells = validateCellsForDatabase(cells);
+            const submitData = {
+                cells: validCells,
+                name : nameInput,
+                author : authorInput,
+                description : descriptionInput,
+                date : getDate(),
+                views : 0,
+                likes : 0,
+                dislikes : 0
+            }
 
-        const submitData = {
-            cells: validCells,
-            name : nameInput,
-            author : authorInput,
-            description : descriptionInput,
-            date : getDate(),
-            views : 0,
-            likes : 0,
-            dislikes : 0
+            onSubmit(submitData);
+            onClose();
+        }else{
+            alert("Fill out all fields with at least 3 characters")
         }
-
-        onSubmit(submitData);
-        onClose();
     }
 
     const validateCellsForDatabase = (cells) => {

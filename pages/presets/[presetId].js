@@ -1,29 +1,34 @@
 import { useEffect, useState } from "react";
 import PresetCanvasContainer from "../../components/Canvas/PresetCanvasContainer";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
+
+var client = "";
+var Id = ""
 
 const PresetDisplay = (props) => {
 
-    useEffect(()=> {console.log("YAY: " + props.presetData.id)})
-
     return (
         <div>
-            <PresetCanvasContainer preset = {props.presetData}/>
+            <PresetCanvasContainer preset = {props.presetData}/>  
         </div>
     )
 }
 
 export default PresetDisplay
 
+async function connectToDatabase(){
+    client = await MongoClient.connect('mongodb+srv://jamieholloway:tvM06MwAzvtsM8TE@cluster0.nfbha.mongodb.net/presets?retryWrites=true&w=majority');
+    const db = client.db();
+    return db.collection('presets');
+}
+
+
 export async function getStaticPaths(){
 
-    const client = await MongoClient.connect('mongodb+srv://jamieholloway:tvM06MwAzvtsM8TE@cluster0.nfbha.mongodb.net/presets?retryWrites=true&w=majority');
-    const db = client.db();
-    const presetsCollections = db.collection('presets');
-
+    const presetsCollections = await connectToDatabase();
     const presets = await presetsCollections.find({}, {_id: 1}).toArray();
 
-    client.close();
+    client.close()
 
     return {
         paths : presets.map((preset) => ({
@@ -36,10 +41,13 @@ export async function getStaticPaths(){
 export async function getStaticProps(context){
 
     const presetId = context.params.presetId;
+    Id = presetId
 
-    const client = await MongoClient.connect('mongodb+srv://jamieholloway:tvM06MwAzvtsM8TE@cluster0.nfbha.mongodb.net/presets?retryWrites=true&w=majority');
-    const db = client.db();
-    const presetsCollections = db.collection('presets');
+    const presetsCollections = await connectToDatabase();
+    
+    await presetsCollections.updateOne({_id : ObjectId(presetId)}, {$inc: {
+        views: 1
+    }})
 
     let presets = await presetsCollections.find().toArray();
 
@@ -60,6 +68,7 @@ export async function getStaticProps(context){
     presets.forEach((preset) => {if(preset.id == presetId){
         selectedPreset = preset
     }});
+
 
     client.close();
 
