@@ -1,9 +1,13 @@
 import pageNavStyles from '../../styles/Presets/PageNav.module.css'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 const PageNav = ({length, onChange, selected}) => {
     const [pageNumbers, updatePageNumberSelection] = useState(Array.from({length: length}, (_, i) => i + 1));
     const [maxPages, updateMaxPages] = useState(Math.min(length, 6))
+
+    useEffect(() => {
+        console.log(length);
+    })
 
     const navClicked = (event) => {
         let clicked = event.target.innerHTML;

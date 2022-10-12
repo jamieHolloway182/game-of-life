@@ -1,14 +1,20 @@
 import PresetList from "../../components/Presets/PresetList"
 import PageNav from "../../components/Presets/PageNav"
 import presetPageStyle from '../../styles/Presets/Presets.module.css'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {MongoClient} from 'mongodb'
 
 const presets = (props) => {
     const [numPerPage, updateNumPerPage] = useState(5);
     const [pageNumberSelected, updatePageNumber] = useState(1);
 
-    const [presets, filterList] = useState(props.presets.filter((preset, index) => index >= (pageNumberSelected-1) * numPerPage && index < pageNumberSelected * numPerPage));
+    
+    useEffect(() => {
+        console.log(presets);
+    })
+
+
+    const [presets, filterList] = useState(props.presets)//.filter((preset, index) => index >= (pageNumberSelected-1) * numPerPage && index < pageNumberSelected * numPerPage));
 
     const handleInput = (event) => {
         filterList(props.presets.forEach((preset, index) => presets[index] = preset));
@@ -17,8 +23,8 @@ const presets = (props) => {
 
     const switchPage = (newNum) => {
         const pageNumberSelected = newNum;
-        filterList(presets.forEach((preset, index) => presets[index] = preset));
-        filterList(presets.filter((preset, index) => index >= (pageNumberSelected-1) * numPerPage && index < pageNumberSelected * numPerPage));
+        // filterList(presets.forEach((preset, index) => presets[index] = preset));
+        // filterList(presets.filter((preset, index) => index >= (pageNumberSelected-1) * numPerPage && index < pageNumberSelected * numPerPage));
         updatePageNumber(pageNumberSelected);
     };
 
@@ -27,11 +33,9 @@ const presets = (props) => {
         let num = "";
         for (let i = 0; i < cellsString.length; i++){
             let char = cellsString.charCodeAt(i)
-            console.log(char)
             if (char >= 48 && char <= 57){
                 num += cellsString[i];
             }else{
-                console.log(num, cells)
                 cells = [...cells, ...Array(parseInt(num)).fill(cellsString[i])];
                 num = "";
             }
@@ -43,11 +47,11 @@ const presets = (props) => {
     
     return (
         <div className={presetPageStyle.container}>
-            <PageNav length={Math.ceil(presets.length / numPerPage)} onChange={switchPage} selected ={pageNumberSelected}/>
+            <PageNav length={Math.ceil(props.presets.length / numPerPage)} onChange={switchPage} selected ={pageNumberSelected}/>
             <form onInput={handleInput}>
                 <input type="textarea" id="searchBox" style = {{margin:'5px'}} placeholder = "Search for preset..."/>
             </form>
-            <PresetList presets={presets} decrypt={decryptCells}/>
+            <PresetList presets={presets} pageNum={pageNumberSelected} decrypt={decryptCells}/>
         </div>
     )
 }
@@ -59,6 +63,8 @@ export async function getServerSideProps(){
     const presetsCollections = db.collection('presets');
 
     const presets = await presetsCollections.find().toArray();
+
+    presets.forEach(console.log)
 
     return {
         props: {
