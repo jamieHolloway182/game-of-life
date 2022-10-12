@@ -59,6 +59,6 @@ export async function getStaticProps(context){
         props : {
             presetData: selectedPreset
         },
-        revalidate: 10
+        revalidate: 1
     };
 }
