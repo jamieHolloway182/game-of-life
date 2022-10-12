@@ -3,7 +3,6 @@ import PresetCanvasContainer from "../../components/Canvas/PresetCanvasContainer
 import { MongoClient, ObjectId } from "mongodb";
 
 var client = "";
-var Id = ""
 
 const PresetDisplay = (props) => {
 
@@ -34,43 +33,27 @@ export async function getStaticPaths(){
         paths : presets.map((preset) => ({
             params: {presetId: preset._id.toString()}
         })),
-        fallback : false
+        fallback : 'blocking'
     };
 }
 
 export async function getStaticProps(context){
 
     const presetId = context.params.presetId;
-    Id = presetId
 
     const presetsCollections = await connectToDatabase();
     
     await presetsCollections.updateOne({_id : ObjectId(presetId)}, {$inc: {
         views: 1
-    }})
-
-    let presets = await presetsCollections.find().toArray();
-
-    presets = presets.map((preset) => ({
-        name: preset.name,
-        author: preset.author,
-        cells: preset.cells,
-        description: preset.description,
-        date: preset.date,
-        views: preset.views,
-        likes: preset.likes,
-        dislikes: preset.dislikes,
-        id: preset._id.toString()
-    }))
-
-    let selectedPreset;
-
-    presets.forEach((preset) => {if(preset.id == presetId){
-        selectedPreset = preset
     }});
 
+    let selectedPreset = await presetsCollections.findOne({
+        _id : ObjectId(presetId)
+    });
 
     client.close();
+
+    selectedPreset._id = selectedPreset._id.toString()
 
     return {
         props : {
